@@ -68,7 +68,7 @@ const Nav = () => {
           <span className="label-accent" style={{ fontSize:8, color: scrolled ? '' : '#FCA5A5' }}>INTELLIGENCE</span>
         </a>
         <div style={{ display:'flex', gap:36 }}>
-          {[['Problem','#problem'],['Solution','#solution'],['Architecture','#architecture'],['Impact','#impact'],['Demo','#demo'],['Scale','#scalability']].map(([l,h]) => (
+          {[['Problem','#problem'],['Solution','#solution'],['Architecture','#architecture'],['Impact','#impact'],['Demo','https://operon.website'],['Scale','#scalability']].map(([l,h]) => (
             <a key={l} href={h} className="t label" style={{ textDecoration:'none', fontSize:10, color: scrolled ? 'var(--ink-2)' : 'rgba(255,255,255,0.5)' }}
               onMouseEnter={e=>e.target.style.color='var(--accent)'}
               onMouseLeave={e=>e.target.style.color=''}

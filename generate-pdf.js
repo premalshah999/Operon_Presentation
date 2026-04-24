@@ -31,12 +31,6 @@ const VIEWPORT_H = 900;
                 transform: none !important;
                 transition: none !important;
             }
-            *, *::before, *::after {
-                transition: none !important;
-                animation: none !important;
-                transition-delay: 0s !important;
-                animation-delay: 0s !important;
-            }
             nav, .progress-bar { display: none !important; }
             .recharts-tooltip-wrapper { display: none !important; }
         `
