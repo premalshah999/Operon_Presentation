@@ -403,16 +403,6 @@ const Architecture = () => {
                     )}
                   </React.Fragment>
                 ))}
-                {/* Resilience side-link */}
-                <div style={{ position:'absolute', right:-160, top:'21%', width:135, zIndex:1 }}>
-                  <div className="t" style={{ background:'var(--bg)', border:'1.5px dashed var(--border-mid)', padding:'20px 16px', textAlign:'center' }}>
-                    <div style={{ fontFamily:'var(--display)', fontSize:14, fontWeight:600, color:'var(--ink)', marginBottom:6 }}>Resilience</div>
-                    <div style={{ fontFamily:'var(--mono)', fontSize:11, color:'var(--ink-3)', lineHeight:1.5 }}>LLM + Deterministic Fallback</div>
-                  </div>
-                  <svg style={{ position:'absolute', left:-40, top:'50%', transform:'translateY(-50%)', width:40, height:2 }}>
-                    <line x1="0" y1="1" x2="40" y2="1" stroke="var(--border-mid)" strokeWidth="2" strokeDasharray="5 4" />
-                  </svg>
-                </div>
               </div>
             </Reveal>
             <Reveal direction="up" delay={0.4}>
@@ -763,34 +753,34 @@ const Demo = () => (
    ═══════════════════════════════════════════════════════════════════ */
 const SCALE_TIERS = [
   {
-    users: '1,000',
+    users: '2,000',
     label: 'Pilot / Regional Bank',
     color: 'var(--green)',
     infra: 'Single server · Managed Postgres · Basic Redis queue',
     agents: 'Sequential pipeline, shared worker pool',
     latency: '< 3 s end-to-end',
     cost: '~ $200 / mo',
-    notes: 'Single Docker Compose stack deployable on any VPS or Railway. No orchestration overhead. Suitable for a 20-50 person ops team.',
+    notes: 'Single Docker container stack deployable on any VPS. No orchestration overhead. Suitable for processing up to 2,000 complaints/month.',
   },
   {
-    users: '5,000',
+    users: '10,000',
     label: 'Mid-Tier Institution',
     color: '#F5A623',
     infra: 'Kubernetes (3-5 nodes) · RDS Postgres · Redis Cluster · S3',
-    agents: 'Async task queue (Celery / RQ) · Horizontal worker scaling',
-    latency: '< 5 s end-to-end · 200 concurrent complaints',
+    agents: 'Async task queue (Celery) · Horizontal worker scaling',
+    latency: '< 5 s end-to-end · 200 concurrent tasks',
     cost: '~ $1,200 / mo',
-    notes: 'Each agent runs as an independent microservice. Complaint jobs are queued and dispatched to whichever worker is free — 50 complaints process in parallel, not sequentially.',
+    notes: 'Agents run as independent microservices. Jobs are queued and dispatched dynamically, allowing 50+ complaints to process in parallel.',
   },
   {
-    users: '50,000',
-    label: 'Large Bank / National Scale',
+    users: '100k+',
+    label: 'National Scale',
     color: 'var(--accent)',
-    infra: 'Multi-region K8s · Aurora Postgres · Kafka · ElasticSearch · CDN',
-    agents: 'Event-driven architecture · Auto-scaling agent pools · Model caching',
-    latency: '< 8 s end-to-end · 2,000+ concurrent complaints',
-    cost: '~ $8,000 / mo',
-    notes: 'Complaints stream through Kafka topics. Each agent tier scales independently based on queue depth. Model responses are cached by signature to eliminate redundant LLM calls.',
+    infra: 'Multi-region K8s · Aurora Postgres · Kafka · S3',
+    agents: 'Event-driven architecture · Auto-scaling agent pools',
+    latency: '< 8 s end-to-end · 2,000+ concurrent tasks',
+    cost: '~ $5,000 / mo',
+    notes: 'Complaints stream through Kafka. Agent tiers scale independently based on queue depth. Responses cached to eliminate redundant API calls.',
   },
 ];
 
@@ -827,7 +817,7 @@ const Scalability = () => (
                   <div style={{ fontFamily:'var(--display)', fontSize:36, fontWeight:600, color:tier.color, lineHeight:1, marginBottom:6 }}>{tier.users}</div>
                   <div style={{ fontFamily:'var(--mono)', fontSize:10, color:'var(--ink-3)', letterSpacing:'0.12em', textTransform:'uppercase' }}>{tier.label}</div>
                 </div>
-                <div style={{ fontFamily:'var(--mono)', fontSize:10, color:tier.color, background:`${tier.color}18`, border:`1px solid ${tier.color}44`, padding:'4px 10px', marginTop:4 }}>users</div>
+                <div style={{ fontFamily:'var(--mono)', fontSize:10, color:tier.color, background:`${tier.color}18`, border:`1px solid ${tier.color}44`, padding:'4px 10px', marginTop:4 }}>cmpl/mo</div>
               </div>
 
               <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
@@ -846,6 +836,11 @@ const Scalability = () => (
           </Reveal>
         ))}
       </div>
+      <Reveal direction="up" delay={0.25}>
+        <div style={{ fontFamily:'var(--mono)', fontSize:12, color:'var(--ink-3)', textAlign:'right', marginTop:'-36px', marginBottom:56 }}>
+          * Final costs shown reflect infrastructure limits. Excludes LLM AI API costs which scale proportionally with complaint volume.
+        </div>
+      </Reveal>
 
       {/* Deployment options */}
       <Reveal direction="up" delay={0.3}>
@@ -872,58 +867,27 @@ const Scalability = () => (
 const FUTURE_ITEMS = [
   {
     title: 'Self-learning agents from supervisor feedback',
-    pitch: 'Every human correction makes Operon smarter — the system learns the bank’s own playbook.',
-    points: [
-      'Every supervisor override — reclassify, re-route, escalate, edit — becomes training data.',
-      'Builds a continuously growing feedback dataset unique to each institution.',
-      'Fine-tunes classification and routing on the institution’s own decisions over time.',
-      'Turns human review from a cost center into a learning loop.',
-    ],
+    pitch: 'Every supervisor override becomes training data, building a continuously growing dataset that fine-tunes the system to the bank’s own playbook over time.',
   },
   {
     title: 'Regulation-grounded reasoning (Regulatory RAG)',
-    pitch: 'We don’t ask the model to remember the law — we ground it in the actual regulatory corpus.',
-    points: [
-      'Every compliance citation retrieved live from CFR, CFPB guidance, OCC bulletins, and state AG actions.',
-      'New regulations propagate automatically without retraining.',
-      'Moves from “plausible citations” to “defensible citations.”',
-    ],
+    pitch: 'Citations are retrieved live from the actual regulatory corpus—including CFR, CFPB guidance, and OCC bulletins—ensuring defensibility and automatic updates.',
   },
   {
     title: 'Multi-agent consensus on high-risk cases',
-    pitch: 'On the cases that matter most, one agent isn’t enough — Operon runs a second opinion automatically.',
-    points: [
-      'For CRITICAL cases, a stronger secondary model reviews primary agent output.',
-      'Disagreements force automatic human review — no silent failures.',
-      'Self-critique loop: agents produce, critique, and revise before finalizing.',
-    ],
+    pitch: 'For critical cases, a secondary model reviews the primary output, forcing automatic human review on disagreements to prevent silent failures.',
   },
   {
     title: 'Continuous evaluation + drift monitoring',
-    pitch: 'We treat our agents like models in production — measured, versioned, and gated by regression tests.',
-    points: [
-      'Golden set of labeled complaints runs against the system on every prompt or model change.',
-      'Tracks accuracy, calibration, and fairness metrics over time.',
-      'Blocks any update that regresses key metrics — auditable quality report per release.',
-    ],
+    pitch: 'A golden set of labeled complaints runs on every update, tracking metrics and blocking any prompt changes that regress quality or fairness.',
   },
   {
     title: 'Multi-tenant role-based access control',
-    pitch: 'Administrator · Manager · User — each role with scoped read/write permissions.',
-    points: [
-      'Administrator: full system access, model config, user management.',
-      'Manager: read + write on assigned queues, supervisor override, reporting.',
-      'User: read-only access to their assigned complaints and status.',
-    ],
+    pitch: 'Administrators, Managers, and Users operate with scoped permissions, ensuring that sensitive queues and model configurations are securely gated.',
   },
   {
     title: 'Parallel agent flows',
-    pitch: 'If 50 complaints arrive at once, all 50 run concurrently — no queue blocking.',
-    points: [
-      'Each complaint dispatched to an independent worker immediately on arrival.',
-      'Agent tiers scale horizontally — no bottleneck at any single stage.',
-      'Priority queue ensures urgent complaints pre-empt low-priority batch jobs.',
-    ],
+    pitch: 'Complaints are dispatched to independent workers immediately upon arrival, allowing agent tiers to scale horizontally without queue bottlenecks.',
   },
 ];
 
@@ -952,15 +916,7 @@ const FutureAndThanks = () => (
                     </div>
                     <div>
                       <div style={{ fontFamily:'var(--display)', fontSize:16, fontWeight:600, color:'#FFFFFF', marginBottom:6, lineHeight:1.35 }}>{item.title}</div>
-                      <div style={{ fontFamily:'var(--mono)', fontSize:11, color:'rgba(220,38,38,0.85)', lineHeight:1.5, marginBottom:10, fontStyle:'italic' }}>"{item.pitch}"</div>
-                      <ul style={{ margin:0, padding:0, listStyle:'none', display:'flex', flexDirection:'column', gap:4 }}>
-                        {item.points.map((pt, j) => (
-                          <li key={j} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
-                            <span style={{ color:'rgba(220,38,38,0.6)', marginTop:2, flexShrink:0 }}>-</span>
-                            <span style={{ fontFamily:'var(--sans)', fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.55 }}>{pt}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div style={{ fontFamily:'var(--sans)', fontSize:14, color:'rgba(255,255,255,0.65)', lineHeight:1.55 }}>{item.pitch}</div>
                     </div>
                   </div>
                 </div>
