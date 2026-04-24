@@ -672,26 +672,9 @@ const CostOfInaction = () => {
                 </div>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={320}>
-              <AreaChart data={savingsData} margin={{ top:10, right:30, left:20, bottom:20 }}>
-                <defs>
-                  <linearGradient id="gradCons" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563EB" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="gradOpt" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#16A34A" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#16A34A" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="month" tick={{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' }} label={{ value:'Month', position:'insideBottom', offset:-10, style:{ fontFamily:'var(--mono)', fontSize:11, fill:'var(--ink-3)' } }} />
-                <YAxis tick={{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' }} tickFormatter={v => `$${v}K`} label={{ value:'Cumulative Net Savings ($K)', angle:-90, position:'insideLeft', offset:0, style:{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' } }} />
-                <Tooltip content={<SavingsTooltip />} />
-                <Area type="monotone" isAnimationActive={false} dataKey="conservative" name="Conservative" stroke="#2563EB" strokeWidth={2.5} fill="url(#gradCons)" dot={false} activeDot={{ r:5, fill:'#2563EB' }} />
-                <Area type="monotone" isAnimationActive={false} dataKey="optimistic" name="Optimistic" stroke="#16A34A" strokeWidth={2.5} fill="url(#gradOpt)" dot={false} activeDot={{ r:5, fill:'#16A34A' }} />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div style={{ width: '100%', marginBottom: 16 }}>
+              <img src="/chart.png" alt="Cumulative Savings Chart" style={{ width: '100%', height: 'auto', display: 'block' }} />
+            </div>
             <div style={{ display:'flex', justifyContent:'space-between', marginTop:16 }}>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <div style={{ width:10, height:10, borderRadius:'50%', background:'var(--accent)' }} />
