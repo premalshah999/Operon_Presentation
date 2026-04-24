@@ -68,7 +68,7 @@ const Nav = () => {
           <span className="label-accent" style={{ fontSize:8, color: scrolled ? '' : '#FCA5A5' }}>INTELLIGENCE</span>
         </a>
         <div style={{ display:'flex', gap:36 }}>
-          {[['Problem','#problem'],['Solution','#solution'],['Architecture','#architecture'],['Impact','#impact'],['Demo','#demo']].map(([l,h]) => (
+          {[['Problem','#problem'],['Solution','#solution'],['Architecture','#architecture'],['Impact','#impact'],['Demo','#demo'],['Scale','#scalability']].map(([l,h]) => (
             <a key={l} href={h} className="t label" style={{ textDecoration:'none', fontSize:10, color: scrolled ? 'var(--ink-2)' : 'rgba(255,255,255,0.5)' }}
               onMouseEnter={e=>e.target.style.color='var(--accent)'}
               onMouseLeave={e=>e.target.style.color=''}
@@ -309,18 +309,18 @@ const OurSolution = () => (
    SLIDE 4 — ARCHITECTURE
    ═══════════════════════════════════════════════════════════════════ */
 const LAYERS = [
-  { id:'intake', label:'Intake Layer', sub:'Web · Email · Phone · CFPB · Batch', color:'var(--accent)', detail:'Multi-channel ingestion normalizes raw complaints from every source into a unified schema before any AI processing begins.' },
-  { id:'orchestration', label:'Agentic Orchestration Layer', sub:'Classification → Compliance → Routing → Resolution → QA', color:'#B91C1C', detail:'Five specialized agents execute sequentially via LangGraph. Each produces structured, auditable JSON outputs for the next agent in the chain.' },
-  { id:'governance', label:'Governance Layer', sub:'Review Gate · Supervisor Queue · Audit Log', color:'var(--green)', detail:'Human-in-the-loop escalation, supervisor overrides, and immutable audit trails ensure every decision meets regulatory standards.' },
-  { id:'delivery', label:'Delivery Layer', sub:'FastAPI · React Dashboard · Ticketing', color:'#7C3AED', detail:'Results surface through REST APIs, a real-time monitoring dashboard, and direct integration with existing case management and ticketing systems.' },
+  { id:'intake',        label:'Intake Layer',                   sub:'Web  ·  Email  ·  Phone  ·  CFPB  ·  Batch',                              color:'var(--accent)', detail:'Multi-channel ingestion normalizes raw complaints from every source into a unified analysis schema before any AI processing begins.' },
+  { id:'orchestration', label:'Agentic Orchestration Layer',    sub:'Classification → Compliance → Routing → Resolution → QA',                 color:'#B91C1C',       detail:'Five specialized agents execute sequentially via LangGraph with structured handoffs and live progress streaming.' },
+  { id:'governance',    label:'Governance Layer',               sub:'Review Gate  ·  Supervisor Queue  ·  Audit Log',                           color:'var(--green)',  detail:'Enforced review gate auto-routes high-risk, low-confidence, and QA-failed cases to supervisor queues with machine-readable reason codes.' },
+  { id:'delivery',      label:'Delivery Layer',                 sub:'FastAPI  ·  React Dashboard  ·  Ticketing',                                color:'#7C3AED',       detail:'Results surface through REST APIs, a real-time monitoring dashboard, and direct integration with existing case management and ticketing systems.' },
 ];
 
 const ARCH_BULLETS = [
-  { bold:'Five-agent pipeline', rest:' orchestrates classification, compliance scoring, routing, resolution, and QA in a single deterministic pass.' },
-  { bold:'LangGraph architecture', rest:' ensures every agent decision is traceable, reproducible, and auditable end-to-end.' },
-  { bold:'Resilience layer', rest:' combines LLM inference with deterministic fallbacks. If the model is uncertain, rule-based logic takes over automatically.' },
-  { bold:'Human-in-the-loop', rest:' escalation gates ensure high-risk cases always reach a supervisor before any response is sent.' },
-  { bold:'Every step is logged', rest:' for auditability and escalation—from raw intake to final case output.' },
+  { bold:'Multi-channel intake + normalization:', rest:' Ingests complaints from web/email/phone/CFPB/batch sources and converts unstructured narratives into a unified analysis schema.' },
+  { bold:'Five-agent orchestration pipeline:', rest:' Sequential specialized agents (Classification → Compliance → Routing → Resolution → QA) with structured handoffs and live progress streaming.' },
+  { bold:'Policy-aware governance layer:', rest:' Enforced review gate auto-routes high-risk/low-confidence/QA-failed cases to supervisor queues with machine-readable reason codes.' },
+  { bold:'Explainability + audit backbone:', rest:' Every agent logs decision, confidence, reasoning, evidence quotes, and processing duration for regulator-defensible traceability.' },
+  { bold:'Resilient execution model:', rest:' Runs on gpt-4.1-mini with deterministic fallback pipeline using the same output contract to ensure continuity under outages.' },
 ];
 
 const Architecture = () => {
@@ -759,15 +759,172 @@ const Demo = () => (
 );
 
 /* ═══════════════════════════════════════════════════════════════════
-   SLIDE 8 — FUTURE + THANK YOU
+   SLIDE 8 — SCALABILITY
+   ═══════════════════════════════════════════════════════════════════ */
+const SCALE_TIERS = [
+  {
+    users: '1,000',
+    label: 'Pilot / Regional Bank',
+    color: 'var(--green)',
+    infra: 'Single server · Managed Postgres · Basic Redis queue',
+    agents: 'Sequential pipeline, shared worker pool',
+    latency: '< 3 s end-to-end',
+    cost: '~ $200 / mo',
+    notes: 'Single Docker Compose stack deployable on any VPS or Railway. No orchestration overhead. Suitable for a 20-50 person ops team.',
+  },
+  {
+    users: '5,000',
+    label: 'Mid-Tier Institution',
+    color: '#F5A623',
+    infra: 'Kubernetes (3-5 nodes) · RDS Postgres · Redis Cluster · S3',
+    agents: 'Async task queue (Celery / RQ) · Horizontal worker scaling',
+    latency: '< 5 s end-to-end · 200 concurrent complaints',
+    cost: '~ $1,200 / mo',
+    notes: 'Each agent runs as an independent microservice. Complaint jobs are queued and dispatched to whichever worker is free — 50 complaints process in parallel, not sequentially.',
+  },
+  {
+    users: '50,000',
+    label: 'Large Bank / National Scale',
+    color: 'var(--accent)',
+    infra: 'Multi-region K8s · Aurora Postgres · Kafka · ElasticSearch · CDN',
+    agents: 'Event-driven architecture · Auto-scaling agent pools · Model caching',
+    latency: '< 8 s end-to-end · 2,000+ concurrent complaints',
+    cost: '~ $8,000 / mo',
+    notes: 'Complaints stream through Kafka topics. Each agent tier scales independently based on queue depth. Model responses are cached by signature to eliminate redundant LLM calls.',
+  },
+];
+
+const DEPLOY_OPTIONS = [
+  { name: 'Vercel + Railway', desc: 'Frontend on Vercel CDN, backend on Railway containers. Zero-ops, instant deploy, ideal for pilots.', tag: '1K users' },
+  { name: 'AWS ECS / App Runner', desc: 'Fully managed containers with auto-scaling. RDS for persistence, ElastiCache for Redis. No K8s overhead.', tag: '1K–5K users' },
+  { name: 'Kubernetes (EKS / GKE)', desc: 'Each agent as an independent Deployment. HPA scales replicas on CPU/queue depth. Helm chart for versioned releases.', tag: '5K–50K users' },
+  { name: 'On-Premise + Air-Gap', desc: 'For institutions with strict data residency. Full Docker Compose or K8s on bare metal with local LLM fallback.', tag: 'Enterprise' },
+];
+
+const Scalability = () => (
+  <section id="scalability" className="slide" style={{ background:'var(--surface)', minHeight:'100vh' }}>
+    <div className="slide-deco" style={{ opacity:0.4 }}>08</div>
+    <div className="container">
+      <Reveal direction="down">
+        <div style={{ marginBottom:56 }}>
+          <span className="label-accent">Slide 08 — Scalability</span>
+          <h2 className="display-sm" style={{ marginTop:16 }}>
+            Built to <span style={{ color:'var(--accent)', fontStyle:'italic' }}>Scale</span>
+          </h2>
+          <p style={{ fontFamily:'var(--sans)', fontSize:18, color:'var(--ink-2)', lineHeight:1.7, maxWidth:640, marginTop:16, fontWeight:400 }}>
+            Operon does not need to be scaled today — but the architecture is designed so that scaling is a configuration change, not a rewrite.
+          </p>
+        </div>
+      </Reveal>
+
+      {/* Tier cards */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:20, marginBottom:56 }}>
+        {SCALE_TIERS.map((tier, i) => (
+          <Reveal key={i} direction="up" delay={0.08 * i}>
+            <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderTop:`4px solid ${tier.color}`, padding:'32px 28px', height:'100%' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:20 }}>
+                <div>
+                  <div style={{ fontFamily:'var(--display)', fontSize:36, fontWeight:600, color:tier.color, lineHeight:1, marginBottom:6 }}>{tier.users}</div>
+                  <div style={{ fontFamily:'var(--mono)', fontSize:10, color:'var(--ink-3)', letterSpacing:'0.12em', textTransform:'uppercase' }}>{tier.label}</div>
+                </div>
+                <div style={{ fontFamily:'var(--mono)', fontSize:10, color:tier.color, background:`${tier.color}18`, border:`1px solid ${tier.color}44`, padding:'4px 10px', marginTop:4 }}>users</div>
+              </div>
+
+              <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+                {[['Infrastructure', tier.infra], ['Agent Execution', tier.agents], ['Latency', tier.latency], ['Est. Cost', tier.cost]].map(([k, v]) => (
+                  <div key={k}>
+                    <div style={{ fontFamily:'var(--mono)', fontSize:9, color:'var(--ink-3)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:4 }}>{k}</div>
+                    <div style={{ fontFamily:'var(--sans)', fontSize:14, color:'var(--ink)', lineHeight:1.5 }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop:20, paddingTop:16, borderTop:'1px solid var(--border)' }}>
+                <p style={{ fontFamily:'var(--sans)', fontSize:13, color:'var(--ink-2)', lineHeight:1.6, margin:0 }}>{tier.notes}</p>
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      {/* Deployment options */}
+      <Reveal direction="up" delay={0.3}>
+        <div className="label" style={{ marginBottom:20 }}>Deployment Options</div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:1, background:'var(--border)' }}>
+          {DEPLOY_OPTIONS.map((opt, i) => (
+            <div key={i} style={{ background:'var(--bg)', padding:'24px 22px' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
+                <div style={{ fontFamily:'var(--display)', fontSize:15, fontWeight:600, color:'var(--ink)', lineHeight:1.3, maxWidth:140 }}>{opt.name}</div>
+                <div style={{ fontFamily:'var(--mono)', fontSize:9, color:'var(--accent)', background:'var(--accent-bg)', border:'1px solid var(--accent-mid)', padding:'3px 8px', whiteSpace:'nowrap' }}>{opt.tag}</div>
+              </div>
+              <p style={{ fontFamily:'var(--sans)', fontSize:13, color:'var(--ink-2)', lineHeight:1.6, margin:0 }}>{opt.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+    </div>
+  </section>
+);
+
+/* ═══════════════════════════════════════════════════════════════════
+   SLIDE 9 — FUTURE + THANK YOU
    ═══════════════════════════════════════════════════════════════════ */
 const FUTURE_ITEMS = [
-  'Real-time streaming ingestion for live complaint feeds',
-  'Predictive complaint volume forecasting',
-  'Multi-language complaint support',
-  'Custom fine-tuning per institution taxonomy',
-  'Integration with internal CRM and case management systems',
-  'Continuous model retraining on new regulatory guidance',
+  {
+    title: 'Self-learning agents from supervisor feedback',
+    pitch: 'Every human correction makes Operon smarter — the system learns the bank’s own playbook.',
+    points: [
+      'Every supervisor override — reclassify, re-route, escalate, edit — becomes training data.',
+      'Builds a continuously growing feedback dataset unique to each institution.',
+      'Fine-tunes classification and routing on the institution’s own decisions over time.',
+      'Turns human review from a cost center into a learning loop.',
+    ],
+  },
+  {
+    title: 'Regulation-grounded reasoning (Regulatory RAG)',
+    pitch: 'We don’t ask the model to remember the law — we ground it in the actual regulatory corpus.',
+    points: [
+      'Every compliance citation retrieved live from CFR, CFPB guidance, OCC bulletins, and state AG actions.',
+      'New regulations propagate automatically without retraining.',
+      'Moves from “plausible citations” to “defensible citations.”',
+    ],
+  },
+  {
+    title: 'Multi-agent consensus on high-risk cases',
+    pitch: 'On the cases that matter most, one agent isn’t enough — Operon runs a second opinion automatically.',
+    points: [
+      'For CRITICAL cases, a stronger secondary model reviews primary agent output.',
+      'Disagreements force automatic human review — no silent failures.',
+      'Self-critique loop: agents produce, critique, and revise before finalizing.',
+    ],
+  },
+  {
+    title: 'Continuous evaluation + drift monitoring',
+    pitch: 'We treat our agents like models in production — measured, versioned, and gated by regression tests.',
+    points: [
+      'Golden set of labeled complaints runs against the system on every prompt or model change.',
+      'Tracks accuracy, calibration, and fairness metrics over time.',
+      'Blocks any update that regresses key metrics — auditable quality report per release.',
+    ],
+  },
+  {
+    title: 'Multi-tenant role-based access control',
+    pitch: 'Administrator · Manager · User — each role with scoped read/write permissions.',
+    points: [
+      'Administrator: full system access, model config, user management.',
+      'Manager: read + write on assigned queues, supervisor override, reporting.',
+      'User: read-only access to their assigned complaints and status.',
+    ],
+  },
+  {
+    title: 'Parallel agent flows',
+    pitch: 'If 50 complaints arrive at once, all 50 run concurrently — no queue blocking.',
+    points: [
+      'Each complaint dispatched to an independent worker immediately on arrival.',
+      'Agent tiers scale horizontally — no bottleneck at any single stage.',
+      'Priority queue ensures urgent complaints pre-empt low-priority batch jobs.',
+    ],
+  },
 ];
 
 const FutureAndThanks = () => (
@@ -779,7 +936,7 @@ const FutureAndThanks = () => (
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'clamp(60px,8vw,120px)', alignItems:'start' }}>
         <div>
           <Reveal direction="right" delay={0.1}>
-            <span className="label-accent" style={{ color:'#FCA5A5' }}>Slide 08 — What's Next</span>
+            <span className="label-accent" style={{ color:'#FCA5A5' }}>Slide 09 — What's Next</span>
             <h2 className="display-sm" style={{ color:'#FFFFFF', marginTop:16, marginBottom:48 }}>
               Future<br /><span style={{ color:'var(--accent)' }}>Enhancements</span>
             </h2>
@@ -788,11 +945,24 @@ const FutureAndThanks = () => (
           <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
             {FUTURE_ITEMS.map((item, i) => (
               <Reveal key={i} direction="right" delay={0.1 + i * 0.06}>
-                <div style={{ display:'grid', gridTemplateColumns:'40px 1fr', gap:16, padding:'18px 0', borderBottom:'1px solid rgba(255,255,255,0.07)', alignItems:'center' }}>
-                  <div style={{ width:28, height:28, background:'rgba(220,38,38,0.15)', border:'1px solid rgba(220,38,38,0.3)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <span style={{ fontFamily:'var(--mono)', fontSize:11, color:'#FCA5A5' }}>{String(i+1).padStart(2,'0')}</span>
+                <div style={{ padding:'20px 0', borderBottom:'1px solid rgba(255,255,255,0.07)' }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'40px 1fr', gap:16, alignItems:'start', marginBottom:12 }}>
+                    <div style={{ width:28, height:28, background:'rgba(220,38,38,0.15)', border:'1px solid rgba(220,38,38,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                      <span style={{ fontFamily:'var(--mono)', fontSize:11, color:'#FCA5A5' }}>{String(i+1).padStart(2,'0')}</span>
+                    </div>
+                    <div>
+                      <div style={{ fontFamily:'var(--display)', fontSize:16, fontWeight:600, color:'#FFFFFF', marginBottom:6, lineHeight:1.35 }}>{item.title}</div>
+                      <div style={{ fontFamily:'var(--mono)', fontSize:11, color:'rgba(220,38,38,0.85)', lineHeight:1.5, marginBottom:10, fontStyle:'italic' }}>"{item.pitch}"</div>
+                      <ul style={{ margin:0, padding:0, listStyle:'none', display:'flex', flexDirection:'column', gap:4 }}>
+                        {item.points.map((pt, j) => (
+                          <li key={j} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
+                            <span style={{ color:'rgba(220,38,38,0.6)', marginTop:2, flexShrink:0 }}>-</span>
+                            <span style={{ fontFamily:'var(--sans)', fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.55 }}>{pt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  <span style={{ fontFamily:'var(--sans)', fontSize:16, color:'rgba(255,255,255,0.7)', lineHeight:1.5, fontWeight:400 }}>{item}</span>
                 </div>
               </Reveal>
             ))}
@@ -856,6 +1026,7 @@ const App = () => (
     <BusinessImpact />
     <CostOfInaction />
     <Demo />
+    <Scalability />
     <FutureAndThanks />
   </>
 );
