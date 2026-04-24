@@ -688,8 +688,8 @@ const CostOfInaction = () => {
                 <XAxis dataKey="month" tick={{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' }} label={{ value:'Month', position:'insideBottom', offset:-10, style:{ fontFamily:'var(--mono)', fontSize:11, fill:'var(--ink-3)' } }} />
                 <YAxis tick={{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' }} tickFormatter={v => `$${v}K`} label={{ value:'Cumulative Net Savings ($K)', angle:-90, position:'insideLeft', offset:0, style:{ fontFamily:'var(--mono)', fontSize:10, fill:'var(--ink-3)' } }} />
                 <Tooltip content={<SavingsTooltip />} />
-                <Area type="monotone" dataKey="conservative" name="Conservative" stroke="#2563EB" strokeWidth={2.5} fill="url(#gradCons)" dot={false} activeDot={{ r:5, fill:'#2563EB' }} />
-                <Area type="monotone" dataKey="optimistic" name="Optimistic" stroke="#16A34A" strokeWidth={2.5} fill="url(#gradOpt)" dot={false} activeDot={{ r:5, fill:'#16A34A' }} />
+                <Area type="monotone" isAnimationActive={false} dataKey="conservative" name="Conservative" stroke="#2563EB" strokeWidth={2.5} fill="url(#gradCons)" dot={false} activeDot={{ r:5, fill:'#2563EB' }} />
+                <Area type="monotone" isAnimationActive={false} dataKey="optimistic" name="Optimistic" stroke="#16A34A" strokeWidth={2.5} fill="url(#gradOpt)" dot={false} activeDot={{ r:5, fill:'#16A34A' }} />
               </AreaChart>
             </ResponsiveContainer>
             <div style={{ display:'flex', justifyContent:'space-between', marginTop:16 }}>
