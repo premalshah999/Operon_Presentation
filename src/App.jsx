@@ -785,10 +785,8 @@ const SCALE_TIERS = [
 ];
 
 const DEPLOY_OPTIONS = [
-  { name: 'Vercel + Railway', desc: 'Frontend on Vercel CDN, backend on Railway containers. Zero-ops, instant deploy, ideal for pilots.', tag: '1K users' },
-  { name: 'AWS ECS / App Runner', desc: 'Fully managed containers with auto-scaling. RDS for persistence, ElastiCache for Redis. No K8s overhead.', tag: '5K users' },
-  { name: 'Kubernetes (EKS / GKE)', desc: 'Each agent as an independent Deployment. HPA scales replicas on CPU/queue depth. Helm chart for versioned releases.', tag: '20K users' },
-  { name: 'On-Premise + Air-Gap', desc: 'For institutions with strict data residency. Full Docker Compose or K8s on bare metal with local LLM fallback.', tag: 'Enterprise' },
+  { name: 'AWS / Azure / GCP', desc: 'Deploy natively onto scalable managed compute infrastructure with managed databases mapped securely against cloud object storage.', tag: 'Cloud Native' },
+  { name: 'On-Premise', desc: 'Designed for institutions with strict data residency. Fully deployable via K8s or Docker bare metal with secure local compute execution isolated from public APIs.', tag: 'Air-Gapped' },
 ];
 
 const Scalability = () => (
@@ -836,16 +834,10 @@ const Scalability = () => (
           </Reveal>
         ))}
       </div>
-      <Reveal direction="up" delay={0.25}>
-        <div style={{ fontFamily:'var(--mono)', fontSize:12, color:'var(--ink-3)', textAlign:'right', marginTop:'-36px', marginBottom:56 }}>
-          * Final costs shown reflect infrastructure limits. Excludes LLM AI API costs which scale proportionally with complaint volume.
-        </div>
-      </Reveal>
-
       {/* Deployment options */}
       <Reveal direction="up" delay={0.3}>
-        <div className="label" style={{ marginBottom:20 }}>Deployment Options</div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:1, background:'var(--border)' }}>
+        <div className="label" style={{ marginBottom:20, marginTop:56 }}>Feasible Deployment Solutions</div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:1, background:'var(--border)' }}>
           {DEPLOY_OPTIONS.map((opt, i) => (
             <div key={i} style={{ background:'var(--bg)', padding:'24px 22px' }}>
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
